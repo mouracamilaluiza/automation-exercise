@@ -1,4 +1,5 @@
 {
+  "testObservability": false,
   "browsers": [{ "browser": "chrome", "os": "Windows 11", "versions": ["latest"] }],
   "run_settings": {
     "cypress_version": "15.latest",

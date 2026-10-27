@@ -10,7 +10,7 @@
     "test": "cypress run",
     "test:open": "cypress open",
     "test:chrome": "cypress run --browser chrome",
-    "test:browserstack": "browserstack-cypress run --sync --spec cypress/e2e/automation-exercise-modules.cy.js",
+    "test:browserstack": "node scripts/run-browserstack.cjs",
     "allure:clean": "node scripts/clean-allure.cjs",
     "allure:generate": "node scripts/check-allure-results.cjs && allure generate allure-results --clean -o allure-report",
     "allure:open": "allure open allure-report"

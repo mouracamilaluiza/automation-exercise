@@ -55,7 +55,9 @@ O Mochawesome fica em `cypress/reports/index.html`. Vídeos e capturas de falha 
 
 O GitHub Actions executa os testes em **pushes e pull requests**. Na branch `main`, publica o Allure no **GitHub Pages**. Relatórios e evidências ficam nos artefatos da execução por **14 dias**.
 
-Para usar o BrowserStack, configure os secrets `BROWSERSTACK_USERNAME` e `BROWSERSTACK_ACCESS_KEY` e execute manualmente o workflow **BrowserStack Cypress**.
+Para usar o BrowserStack localmente, copie `.env.example` para `.env`, preencha `BROWSERSTACK_USERNAME` e `BROWSERSTACK_ACCESS_KEY` com as [credenciais da sua conta](https://www.browserstack.com/accounts/settings/product) e execute `npm run test:browserstack`. O arquivo `.env` não é versionado nem enviado à nuvem.
+
+No GitHub, configure os mesmos nomes nos secrets e execute manualmente o workflow **BrowserStack Cypress**. Secrets do GitHub não são disponibilizados automaticamente no terminal local.
 
 ## Estrutura
 
