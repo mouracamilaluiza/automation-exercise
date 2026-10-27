@@ -6,8 +6,7 @@ cypress/downloads/
 browserstack-artifacts/
 logs/
 *.log
-.env
-.env.*
+.env*
 !.env.example
 cypress.env.json
 browserstack.local.json
@@ -15,3 +14,6 @@ allure-results/
 allure-report/
 log/
 results/
+tmpBstackPackages/
+bstackPackages.tar.gz
+tests.zip
