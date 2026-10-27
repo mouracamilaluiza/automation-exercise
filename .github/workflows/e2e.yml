@@ -21,10 +21,14 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      - name: Validar código e formatação
+        run: npm run lint && npm run format:check
+      - name: Verificar disponibilidade da aplicação
+        run: npm run healthcheck
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: '17'
+          java-version: "17"
       - name: Executar os dez casos no Chrome
         run: npm run test:chrome
       - name: Gerar relatório Allure mesmo quando houver falhas nos testes

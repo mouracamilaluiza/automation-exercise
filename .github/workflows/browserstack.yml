@@ -22,4 +22,6 @@ jobs:
           test -n "$BROWSERSTACK_USERNAME" || { echo 'Configure BROWSERSTACK_USERNAME nos secrets'; exit 1; }
           test -n "$BROWSERSTACK_ACCESS_KEY" || { echo 'Configure BROWSERSTACK_ACCESS_KEY nos secrets'; exit 1; }
       - run: npm ci
+      - run: npm run lint && npm run format:check
+      - run: npm run healthcheck
       - run: npm run test:browserstack
