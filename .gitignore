@@ -1,0 +1,14 @@
+node_modules/
+cypress/reports/
+cypress/screenshots/
+cypress/videos/
+cypress/downloads/
+browserstack-artifacts/
+logs/
+*.log
+.env
+.env.*
+cypress.env.json
+browserstack.local.json
+allure-results/
+allure-report/

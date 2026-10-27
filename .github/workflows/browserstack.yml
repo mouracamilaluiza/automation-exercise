@@ -1,0 +1,25 @@
+name: BrowserStack Cypress
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  browserstack:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      BROWSERSTACK_USERNAME: ${{ secrets.BROWSERSTACK_USERNAME }}
+      BROWSERSTACK_ACCESS_KEY: ${{ secrets.BROWSERSTACK_ACCESS_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Verificar configuração
+        shell: bash
+        run: |
+          test -n "$BROWSERSTACK_USERNAME" || { echo 'Configure BROWSERSTACK_USERNAME nos secrets'; exit 1; }
+          test -n "$BROWSERSTACK_ACCESS_KEY" || { echo 'Configure BROWSERSTACK_ACCESS_KEY nos secrets'; exit 1; }
+      - run: npm ci
+      - run: npm run test:browserstack

@@ -1,0 +1,81 @@
+name: Cypress E2E
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: e2e-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  cypress:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    outputs:
+      pages-ready: ${{ steps.pages-artifact.outcome == 'success' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Executar os dez casos no Chrome
+        run: npm run test:chrome
+      - name: Gerar relatório Allure mesmo quando houver falhas nos testes
+        id: allure
+        if: ${{ !cancelled() }}
+        run: npm run allure:generate
+      - name: Publicar relatórios e evidências
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cypress-evidencias-${{ github.run_number }}
+          path: |
+            cypress/reports
+            cypress/screenshots
+            cypress/videos
+            allure-results
+            allure-report
+          retention-days: 14
+          if-no-files-found: warn
+      - name: Preparar relatório para GitHub Pages
+        id: pages-artifact
+        if: >-
+          ${{ !cancelled() && steps.allure.outcome == 'success' &&
+              github.event_name != 'pull_request' &&
+              github.ref == format('refs/heads/{0}', github.event.repository.default_branch) }}
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: allure-report
+
+  deploy:
+    name: Publicar Allure no GitHub Pages
+    needs: cypress
+    if: >-
+      ${{ !cancelled() && needs.cypress.outputs.pages-ready == 'true' &&
+          github.event_name != 'pull_request' &&
+          github.ref == format('refs/heads/{0}', github.event.repository.default_branch) }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    concurrency:
+      group: github-pages
+      cancel-in-progress: false
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Configurar GitHub Pages
+        uses: actions/configure-pages@v5
+      - name: Publicar relatório
+        id: deployment
+        uses: actions/deploy-pages@v4
